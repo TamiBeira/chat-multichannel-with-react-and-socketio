@@ -1,5 +1,10 @@
+import { Login } from "./screens/Login";
 function App() {
-  return <div>Let's start</div>;
+    return (
+        <div>
+            <Login />
+        </div>
+    );
 }
 
 export default App;
