@@ -33,14 +33,23 @@ export const ChannelContextProvider = ({
 }) => {
     const socket = useRef<Socket>();
     const [userName, setUserName] = useState("");
+    const [channels, setChannels] = useState<IChannel[]>([]);
 
     useEffect(() => {
         socket.current = io("http://localhost:3333");
+        socket.current.on("channels:get", (data) => {
+            console.log("criou:", data);
+            setChannels(data);
+        });
     }, []);
 
     const login = (userName: string) => {
-        return socket.current?.emit("user:login", userName);
+        socket.current?.emit("user:login", userName);
         setUserName(userName);
+    };
+
+    const createChannel = (channelName: string) => {
+        socket.current?.emit("channel:create", channelName);
     };
 
     return (
@@ -48,8 +57,8 @@ export const ChannelContextProvider = ({
             value={{
                 login,
                 channel: undefined,
-                channels: [],
-                createChannel: () => {},
+                channels,
+                createChannel,
                 createMessage: () => {},
                 joinChannel: () => {},
                 userName,
