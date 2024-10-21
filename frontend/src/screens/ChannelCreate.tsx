@@ -11,6 +11,7 @@ export const ChannelCreate = () => {
                 onSubmit={(event) => {
                     event.preventDefault();
                     createChannel(channelName);
+                    setChannelName("");
                 }}
             >
                 <label>Nome do Canal</label>

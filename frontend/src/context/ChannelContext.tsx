@@ -9,7 +9,7 @@ interface IMessage {
 export interface IChannel {
     name: string;
     id: string;
-    message: IMessage[];
+    messages: IMessage[];
 }
 interface IChannelContext {
     channels: IChannel[];
@@ -38,7 +38,6 @@ export const ChannelContextProvider = ({
     useEffect(() => {
         socket.current = io("http://localhost:3333");
         socket.current.on("channels:get", (data) => {
-            console.log("criou:", data);
             setChannels(data);
         });
     }, []);
