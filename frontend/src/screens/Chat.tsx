@@ -1,13 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useChannelContext } from "../hooks/useChannelContext";
 import { Link, useParams, useNavigate } from "react-router-dom";
 
-export const Chat = () => {
+export const Chat = (): JSX.Element | null => {
     const [message, setMessage] = useState("");
     const { channel, joinChannel, createMessage, userName } =
         useChannelContext();
     const { channelId } = useParams<{ channelId: string }>();
     const navigate = useNavigate();
+    const divRef = useRef<HTMLDivElement>(null);
+
+    const goToBottom = () => {
+        if (divRef.current) {
+            divRef.current.scrollTop = divRef.current?.scrollHeight;
+        }
+    };
+
+    useEffect(() => {
+        goToBottom();
+    }, [channel?.messages]);
 
     useEffect(() => {
         if (!channelId) {
@@ -19,7 +30,7 @@ export const Chat = () => {
 
     if (!userName) {
         navigate("/login");
-        return;
+        return null;
     }
     return (
         <>
@@ -28,7 +39,10 @@ export const Chat = () => {
                     <h5># {channel?.name}</h5>
                     <Link to="/channels">Voltar</Link>
                 </div>
-                <div>
+                <div
+                    ref={divRef}
+                    style={{ maxHeight: "300px", overflowY: "auto" }}
+                >
                     {channel?.messages.map((message, index) => (
                         <div key={index}>
                             <strong>{message?.userName}</strong>:{" "}
